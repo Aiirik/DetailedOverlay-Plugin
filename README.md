@@ -1,11 +1,15 @@
 # Detailed Overlay
 
-RuneLite external plugin that adds lightweight inventory overlays for:
+RuneLite external plugin that adds lightweight overlays for:
 
-- Potion doses (4,3,2,1)
-- Teleport tablets (overlay names on top of Teleport tablets)
-- Elemental and combination staves (shows runes they provide)
-- Combat style XP labels (shows combat style XP you will gain)
+- **Potion doses**
+  - Shows (4,3,2,1) beside your potion, making it clear how many doses it has left.
+- **Teleport tablets** 
+  - Overlay names on top of Teleport tablets, no more confusion.
+- **Elemental and combination staves** 
+  - Shows runes they provide, never guess or take the wrong staff with you.
+- **Combat style XP labels** 
+  - Shows combat style XP (ATK, STR, DEF) you will gain on the buttons themselves.
 
 ## Development
 
