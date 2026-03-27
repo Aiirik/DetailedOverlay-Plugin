@@ -39,9 +39,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 tasks.withType(JavaExec).configureEach {
-	javaLauncher = javaToolchains.launcherFor {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
 	jvmArgs "-ea"
 	jvmArgs "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
 }

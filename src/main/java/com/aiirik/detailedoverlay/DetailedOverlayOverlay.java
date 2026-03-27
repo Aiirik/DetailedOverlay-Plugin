@@ -36,15 +36,13 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import net.runelite.api.ItemID;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetItem;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.WidgetItemOverlay;
 
-@SuppressWarnings("deprecation")
 public class DetailedOverlayOverlay extends WidgetItemOverlay
 {
 	private static final int[] EMPTY_RUNES = new int[0];
@@ -73,18 +71,18 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 		showOnEquipment();
 		showOnBank();
 		showOnInterfaces(
-			WidgetID.BANK_GROUP_ID,
-			WidgetID.BANK_INVENTORY_GROUP_ID,
-			WidgetID.DEPOSIT_BOX_GROUP_ID,
-			WidgetID.GRAND_EXCHANGE_GROUP_ID,
-			WidgetID.GRAND_EXCHANGE_INVENTORY_GROUP_ID,
-			WidgetID.GUIDE_PRICES_GROUP_ID,
-			WidgetID.GUIDE_PRICES_INVENTORY_GROUP_ID,
-			WidgetID.SEED_VAULT_GROUP_ID,
-			WidgetID.SEED_VAULT_INVENTORY_GROUP_ID,
-			WidgetID.SHOP_GROUP_ID,
-			WidgetID.SHOP_INVENTORY_GROUP_ID,
-			WidgetID.SMITHING_GROUP_ID
+			InterfaceID.BANKMAIN,
+			InterfaceID.BANKSIDE,
+			InterfaceID.BANK_DEPOSITBOX,
+			InterfaceID.GE_OFFERS,
+			InterfaceID.GE_OFFERS_SIDE,
+			InterfaceID.GE_PRICECHECKER,
+			InterfaceID.GE_PRICECHECKER_SIDE,
+			InterfaceID.SEED_VAULT,
+			InterfaceID.SEED_VAULT_DEPOSIT,
+			InterfaceID.SHOPMAIN,
+			InterfaceID.SHOPSIDE,
+			InterfaceID.SMITHING
 		);
 	}
 
@@ -205,19 +203,19 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 			return false;
 		}
 
-		int groupId = WidgetInfo.TO_GROUP(widget.getId());
-		return groupId == WidgetID.BANK_GROUP_ID
-			|| groupId == WidgetID.BANK_INVENTORY_GROUP_ID
-			|| groupId == WidgetID.DEPOSIT_BOX_GROUP_ID
-			|| groupId == WidgetID.GRAND_EXCHANGE_GROUP_ID
-			|| groupId == WidgetID.GRAND_EXCHANGE_INVENTORY_GROUP_ID
-			|| groupId == WidgetID.GUIDE_PRICES_GROUP_ID
-			|| groupId == WidgetID.GUIDE_PRICES_INVENTORY_GROUP_ID
-			|| groupId == WidgetID.SEED_VAULT_GROUP_ID
-			|| groupId == WidgetID.SEED_VAULT_INVENTORY_GROUP_ID
-			|| groupId == WidgetID.SHOP_GROUP_ID
-			|| groupId == WidgetID.SHOP_INVENTORY_GROUP_ID
-			|| groupId == WidgetID.SMITHING_GROUP_ID;
+		int groupId = widget.getId() >>> 16;
+		return groupId == InterfaceID.BANKMAIN
+			|| groupId == InterfaceID.BANKSIDE
+			|| groupId == InterfaceID.BANK_DEPOSITBOX
+			|| groupId == InterfaceID.GE_OFFERS
+			|| groupId == InterfaceID.GE_OFFERS_SIDE
+			|| groupId == InterfaceID.GE_PRICECHECKER
+			|| groupId == InterfaceID.GE_PRICECHECKER_SIDE
+			|| groupId == InterfaceID.SEED_VAULT
+			|| groupId == InterfaceID.SEED_VAULT_DEPOSIT
+			|| groupId == InterfaceID.SHOPMAIN
+			|| groupId == InterfaceID.SHOPSIDE
+			|| groupId == InterfaceID.SMITHING;
 	}
 
 	private boolean isEquipmentWidgetId(Widget widget)
@@ -227,9 +225,9 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 			return false;
 		}
 
-		int groupId = WidgetInfo.TO_GROUP(widget.getId());
-		return groupId == WidgetID.EQUIPMENT_GROUP_ID
-			|| groupId == WidgetID.EQUIPMENT_INVENTORY_GROUP_ID;
+		int groupId = widget.getId() >>> 16;
+		return groupId == InterfaceID.WORNITEMS
+			|| groupId == InterfaceID.EQUIPMENT_SIDE;
 	}
 
 	private String getPotionDoses(String name, String lowerName)
