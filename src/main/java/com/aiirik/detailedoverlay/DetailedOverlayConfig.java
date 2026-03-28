@@ -77,7 +77,7 @@ public interface DetailedOverlayConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(keyName = "potionPosition", name = "Position", description = "Where to place the dose text", position = 4, section = potionSection)
+	@ConfigItem(keyName = "potionPosition", name = "Inv Position", description = "Where to place the dose text in your inventory", position = 4, section = potionSection)
 	default ItemPosition potionPosition()
 	{
 		return ItemPosition.TOP_LEFT;
@@ -123,7 +123,7 @@ public interface DetailedOverlayConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(keyName = "teleportPosition", name = "Position", description = "Where to place the teleport text", position = 24, section = teleportSection)
+	@ConfigItem(keyName = "teleportPosition", name = "Inv Position", description = "Where to place the teleport text in your inventory", position = 24, section = teleportSection)
 	default ItemPosition teleportPosition()
 	{
 		return ItemPosition.CENTER;
@@ -208,7 +208,7 @@ public interface DetailedOverlayConfig extends Config
 	@ConfigItem(keyName = "iconSize", name = "Icon Size", description = "Size of the rune icons", position = 35, section = staffSection)
 	default int iconSize()
 	{
-		return 15;
+		return 16;
 	}
 
 	@Range(min = -5, max = 10)
