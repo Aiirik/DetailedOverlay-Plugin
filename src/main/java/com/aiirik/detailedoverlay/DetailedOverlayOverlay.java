@@ -35,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
-import net.runelite.api.ItemID;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetItem;
@@ -46,6 +45,10 @@ import net.runelite.client.ui.overlay.WidgetItemOverlay;
 public class DetailedOverlayOverlay extends WidgetItemOverlay
 {
 	private static final int[] EMPTY_RUNES = new int[0];
+	private static final int FIRE_RUNE_ID = 554;
+	private static final int WATER_RUNE_ID = 555;
+	private static final int AIR_RUNE_ID = 556;
+	private static final int EARTH_RUNE_ID = 557;
 	private static final String[] JEWELRY_KEYWORDS =
 	{
 		"bracelet", "amulet", "ring", "necklace", "glory", "wealth", "skills", "games", "dueling", "binding"
@@ -113,24 +116,6 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 			return;
 		}
 
-		if (overlayItem.teleportCode != null
-			&& config.showTeleports()
-			&& shouldRenderInLocation(inContainer, false, config.showTeleportsInContainers(), false))
-		{
-			renderText(
-				graphics,
-				bounds,
-				overlayItem.teleportCode,
-				config.teleportColor(),
-				config.teleportSize(),
-				getTeleportPosition(inContainer),
-				0,
-				config.teleportOutline(),
-				inContainer
-			);
-			return;
-		}
-
 		if (overlayItem.staffRunes.length > 0
 			&& config.showRunes()
 			&& shouldRenderInLocation(inContainer, inEquipment, config.showRunesInContainers(), config.showRunesOnEquipment()))
@@ -154,26 +139,15 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 		String potionDoses = getPotionDoses(name, lowerName);
 		if (potionDoses != null)
 		{
-			return new OverlayItem(potionDoses, null, EMPTY_RUNES);
+			return new OverlayItem(potionDoses, EMPTY_RUNES);
 		}
 
-		String teleportCode = getTeleportTabText(lowerName);
-		if (teleportCode != null)
-		{
-			return new OverlayItem(null, teleportCode, EMPTY_RUNES);
-		}
-
-		return new OverlayItem(null, null, getRuneIdsForStaff(lowerName));
+		return new OverlayItem(null, getRuneIdsForStaff(lowerName));
 	}
 
 	private DetailedOverlayConfig.ItemPosition getPotionPosition(boolean inContainer)
 	{
 		return inContainer ? config.potionContainerPosition() : config.potionPosition();
-	}
-
-	private DetailedOverlayConfig.ItemPosition getTeleportPosition(boolean inContainer)
-	{
-		return inContainer ? config.teleportContainerPosition() : config.teleportPosition();
 	}
 
 	private boolean shouldRenderInLocation(boolean inContainer, boolean inEquipment, boolean enabledInContainers, boolean enabledOnEquipment)
@@ -267,29 +241,6 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 			}
 		}
 
-		return null;
-	}
-
-	private String getTeleportTabText(String lowerName)
-	{
-		if (!(lowerName.contains("teleport") || lowerName.contains("teletab")))
-		{
-			return null;
-		}
-
-		if (lowerName.contains("varrock")) return "VAR";
-		if (lowerName.contains("lumbridge")) return "LUM";
-		if (lowerName.contains("falador")) return "FAL";
-		if (lowerName.contains("camelot")) return "CAM";
-		if (lowerName.contains("ardougne")) return "ARD";
-		if (lowerName.contains("watchtower")) return "WAT";
-		if (lowerName.contains("house")) return "POH";
-		if (lowerName.contains("draynor")) return "DRA";
-		if (lowerName.contains("barrows")) return "BAR";
-		if (lowerName.contains("rellekka")) return "REL";
-		if (lowerName.contains("kourend")) return "KOU";
-		if (lowerName.contains("annakarl")) return "ANN";
-		if (lowerName.contains("ghorrock")) return "GHO";
 		return null;
 	}
 
@@ -473,16 +424,16 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 			return EMPTY_RUNES;
 		}
 
-		if (lowerName.contains("lava")) return new int[]{ItemID.FIRE_RUNE, ItemID.EARTH_RUNE};
-		if (lowerName.contains("mud")) return new int[]{ItemID.WATER_RUNE, ItemID.EARTH_RUNE};
-		if (lowerName.contains("steam")) return new int[]{ItemID.FIRE_RUNE, ItemID.WATER_RUNE};
-		if (lowerName.contains("smoke")) return new int[]{ItemID.FIRE_RUNE, ItemID.AIR_RUNE};
-		if (lowerName.contains("mist")) return new int[]{ItemID.WATER_RUNE, ItemID.AIR_RUNE};
-		if (lowerName.contains("dust")) return new int[]{ItemID.EARTH_RUNE, ItemID.AIR_RUNE};
-		if (lowerName.contains("fire")) return new int[]{ItemID.FIRE_RUNE};
-		if (lowerName.contains("water")) return new int[]{ItemID.WATER_RUNE};
-		if (lowerName.contains("air")) return new int[]{ItemID.AIR_RUNE};
-		if (lowerName.contains("earth")) return new int[]{ItemID.EARTH_RUNE};
+		if (lowerName.contains("lava")) return new int[]{FIRE_RUNE_ID, EARTH_RUNE_ID};
+		if (lowerName.contains("mud")) return new int[]{WATER_RUNE_ID, EARTH_RUNE_ID};
+		if (lowerName.contains("steam")) return new int[]{FIRE_RUNE_ID, WATER_RUNE_ID};
+		if (lowerName.contains("smoke")) return new int[]{FIRE_RUNE_ID, AIR_RUNE_ID};
+		if (lowerName.contains("mist")) return new int[]{WATER_RUNE_ID, AIR_RUNE_ID};
+		if (lowerName.contains("dust")) return new int[]{EARTH_RUNE_ID, AIR_RUNE_ID};
+		if (lowerName.contains("fire")) return new int[]{FIRE_RUNE_ID};
+		if (lowerName.contains("water")) return new int[]{WATER_RUNE_ID};
+		if (lowerName.contains("air")) return new int[]{AIR_RUNE_ID};
+		if (lowerName.contains("earth")) return new int[]{EARTH_RUNE_ID};
 		return EMPTY_RUNES;
 	}
 
@@ -493,22 +444,20 @@ public class DetailedOverlayOverlay extends WidgetItemOverlay
 
 	private String getLetter(int runeId)
 	{
-		if (runeId == ItemID.FIRE_RUNE) return "F";
-		if (runeId == ItemID.WATER_RUNE) return "W";
-		if (runeId == ItemID.AIR_RUNE) return "A";
+		if (runeId == FIRE_RUNE_ID) return "F";
+		if (runeId == WATER_RUNE_ID) return "W";
+		if (runeId == AIR_RUNE_ID) return "A";
 		return "E";
 	}
 
 	private static final class OverlayItem
 	{
 		private final String potionDoses;
-		private final String teleportCode;
 		private final int[] staffRunes;
 
-		private OverlayItem(String potionDoses, String teleportCode, int[] staffRunes)
+		private OverlayItem(String potionDoses, int[] staffRunes)
 		{
 			this.potionDoses = potionDoses;
-			this.teleportCode = teleportCode;
 			this.staffRunes = staffRunes;
 		}
 	}

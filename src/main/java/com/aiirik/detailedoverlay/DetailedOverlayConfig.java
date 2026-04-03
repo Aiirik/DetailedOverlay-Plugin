@@ -102,52 +102,6 @@ public interface DetailedOverlayConfig extends Config
 		return ItemPosition.BOTTOM_LEFT;
 	}
 
-	@ConfigSection(name = "Teleport Tablets", description = "Settings for teleport tablets", position = 20)
-	String teleportSection = "teleportSection";
-
-	@ConfigItem(keyName = "showTeleports", name = "Show Teleport Tablets", description = "Show names on teleport tablets", position = 21, section = teleportSection)
-	default boolean showTeleports()
-	{
-		return true;
-	}
-
-	@ConfigItem(keyName = "teleportColor", name = "Color", description = "Color of the teleport text", position = 22, section = teleportSection)
-	default Color teleportColor()
-	{
-		return new Color(255, 200, 0);
-	}
-
-	@ConfigItem(keyName = "teleportOutline", name = "Text Outline", description = "Draw a thick black outline", position = 23, section = teleportSection)
-	default boolean teleportOutline()
-	{
-		return true;
-	}
-
-	@ConfigItem(keyName = "teleportPosition", name = "Inv Position", description = "Where to place the teleport text in your inventory", position = 24, section = teleportSection)
-	default ItemPosition teleportPosition()
-	{
-		return ItemPosition.CENTER;
-	}
-
-	@Range(min = 8, max = 20)
-	@ConfigItem(keyName = "teleportSize", name = "Font Size", description = "Size of the teleport text", position = 25, section = teleportSection)
-	default int teleportSize()
-	{
-		return 15;
-	}
-
-	@ConfigItem(keyName = "showTeleportsInContainers", name = "Show In Banks", description = "Also show teleport tablets in bank and other inventory-style containers", position = 26, section = teleportSection)
-	default boolean showTeleportsInContainers()
-	{
-		return true;
-	}
-
-	@ConfigItem(keyName = "teleportContainerPosition", name = "Bank Position", description = "Where to place the teleport tablet text in banks and shops", position = 27, section = teleportSection)
-	default ItemPosition teleportContainerPosition()
-	{
-		return ItemPosition.BOTTOM_LEFT;
-	}
-
 	@ConfigSection(name = "Staves", description = "Settings for staff runes", position = 30)
 	String staffSection = "staffSection";
 

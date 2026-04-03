@@ -33,8 +33,8 @@ import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
 	name = "Detailed Overlay",
-	description = "Shows item and combat overlays for potions, teleport tablets, staves, and combat styles",
-	tags = {"inventory", "items", "doses", "teleport", "staff", "combat"}
+	description = "Shows item and combat overlays for potions, staves, and combat styles",
+	tags = {"inventory", "items", "doses", "staff", "combat"}
 )
 public class DetailedOverlayPlugin extends Plugin
 {
