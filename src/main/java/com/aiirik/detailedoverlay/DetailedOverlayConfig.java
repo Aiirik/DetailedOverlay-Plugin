@@ -268,25 +268,6 @@ public interface DetailedOverlayConfig extends Config
 		}
 	}
 
-	enum CombatMaxHitDisplayMode
-	{
-		SELECTED_STYLE("Selected Style"),
-		COMBAT_TAB_CORNER("Combat Tab Corner");
-
-		private final String name;
-
-		CombatMaxHitDisplayMode(String name)
-		{
-			this.name = name;
-		}
-
-		@Override
-		public String toString()
-		{
-			return name;
-		}
-	}
-
 	@ConfigSection(name = "Combat Styles", description = "Settings for combat style XP labels", position = 40)
 	String combatStyleSection = "combatStyleSection";
 
@@ -340,70 +321,4 @@ public interface DetailedOverlayConfig extends Config
 	{
 		return -2;
 	}
-
-	@ConfigItem(keyName = "showCombatMaxHit", name = "Show Max Hit (Requires Max Hit Plugin)", description = "Show your current max hit in the combat tab. This requires a separate max hit plugin to be installed and enabled", position = 49, section = combatStyleSection)
-	default boolean showCombatMaxHit()
-	{
-		return true;
-	}
-
-	@ConfigItem(keyName = "combatMaxHitDisplayMode", name = "Max Hit Display", description = "Show max hit on the selected attack style or in the combat tab corner", position = 50, section = combatStyleSection)
-	default CombatMaxHitDisplayMode combatMaxHitDisplayMode()
-	{
-		return CombatMaxHitDisplayMode.SELECTED_STYLE;
-	}
-
-	@ConfigItem(keyName = "combatMaxHitColor", name = "Max Hit Color", description = "Color of the max hit text", position = 51, section = combatStyleSection)
-	default Color combatMaxHitColor()
-	{
-		return new Color(255, 214, 10);
-	}
-
-	@ConfigItem(keyName = "combatMaxHitOutline", name = "Max Hit Outline", description = "Draw a thick black outline for the max hit text", position = 52, section = combatStyleSection)
-	default boolean combatMaxHitOutline()
-	{
-		return true;
-	}
-
-	@ConfigItem(keyName = "combatMaxHitPosition", name = "Max Hit Position", description = "Where to place the max hit text when using selected style mode", position = 53, section = combatStyleSection)
-	default ItemPosition combatMaxHitPosition()
-	{
-		return ItemPosition.TOP_RIGHT;
-	}
-
-	@Range(min = 9, max = 18)
-	@ConfigItem(keyName = "combatMaxHitSize", name = "Max Hit Size", description = "Size of the max hit text", position = 54, section = combatStyleSection)
-	default int combatMaxHitSize()
-	{
-		return 15;
-	}
-
-	@Range(min = -20, max = 20)
-	@ConfigItem(keyName = "combatMaxHitXOffset", name = "Selected Style X Offset", description = "Horizontal nudge for max hit text in selected style mode", position = 55, section = combatStyleSection)
-	default int combatMaxHitXOffset()
-	{
-		return -3;
-	}
-
-	@Range(min = -20, max = 20)
-	@ConfigItem(keyName = "combatMaxHitYOffset", name = "Selected Style Y Offset", description = "Vertical nudge for max hit text in selected style mode", position = 56, section = combatStyleSection)
-	default int combatMaxHitYOffset()
-	{
-		return 2;
-	}
-
-	@Range(min = -20, max = 20)
-	@ConfigItem(keyName = "combatTabCornerMaxHitXOffset", name = "Tab Corner X Offset", description = "Horizontal nudge for max hit text in combat tab corner mode", position = 57, section = combatStyleSection)
-	default int combatTabCornerMaxHitXOffset()
-	{
-		return -5;
-	}
-
-	@Range(min = -20, max = 20)
-	@ConfigItem(keyName = "combatTabCornerMaxHitYOffset", name = "Tab Corner Y Offset", description = "Vertical nudge for max hit text in combat tab corner mode", position = 58, section = combatStyleSection)
-	default int combatTabCornerMaxHitYOffset()
-	{
-		return 5;
-	}
-
 }

@@ -31,8 +31,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -43,11 +41,8 @@ import net.runelite.api.GameState;
 import net.runelite.api.ParamID;
 import net.runelite.api.StructComposition;
 import net.runelite.api.gameval.InterfaceID;
-import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -67,15 +62,13 @@ public class CombatStyleOverlay extends Overlay
 
 	private final Client client;
 	private final DetailedOverlayConfig config;
-	private final PluginManager pluginManager;
 	private final Map<Integer, CombatStyleXp[]> weaponTypeCache = new HashMap<>();
 
 	@Inject
-	public CombatStyleOverlay(Client client, DetailedOverlayConfig config, PluginManager pluginManager)
+	public CombatStyleOverlay(Client client, DetailedOverlayConfig config)
 	{
 		this.client = client;
 		this.config = config;
-		this.pluginManager = pluginManager;
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
 	}
@@ -88,7 +81,7 @@ public class CombatStyleOverlay extends Overlay
 			return null;
 		}
 
-		if (!config.showCombatStyleXp() && !config.showCombatMaxHit())
+		if (!config.showCombatStyleXp())
 		{
 			return null;
 		}
@@ -128,129 +121,7 @@ public class CombatStyleOverlay extends Overlay
 			}
 		}
 
-		if (config.showCombatMaxHit())
-		{
-			renderMaxHit(graphics);
-		}
-
 		return null;
-	}
-
-	private void renderMaxHit(Graphics2D graphics)
-	{
-		String maxHitText = getMaxHitText();
-		if (maxHitText == null)
-		{
-			return;
-		}
-
-		if (config.combatMaxHitDisplayMode() == DetailedOverlayConfig.CombatMaxHitDisplayMode.COMBAT_TAB_CORNER)
-		{
-			Rectangle combatTabBounds = getCombatTabBounds();
-			if (combatTabBounds == null)
-			{
-				return;
-			}
-
-			renderText(
-				graphics,
-				combatTabBounds,
-				maxHitText,
-				config.combatMaxHitColor(),
-				config.combatMaxHitSize(),
-				DetailedOverlayConfig.ItemPosition.TOP_RIGHT,
-				config.combatTabCornerMaxHitXOffset(),
-				config.combatTabCornerMaxHitYOffset(),
-				config.combatMaxHitOutline()
-			);
-			return;
-		}
-
-		int selectedStyleIndex = getSelectedStyleIndex();
-		if (selectedStyleIndex < 0 || selectedStyleIndex >= STYLE_WIDGETS.length)
-		{
-			return;
-		}
-
-		Widget widget = client.getWidget(STYLE_WIDGETS[selectedStyleIndex]);
-		if (widget == null || widget.isHidden())
-		{
-			return;
-		}
-
-		Rectangle bounds = widget.getBounds();
-		if (bounds == null || bounds.width <= 0 || bounds.height <= 0)
-		{
-			return;
-		}
-
-		renderText(
-			graphics,
-			bounds,
-			maxHitText,
-			config.combatMaxHitColor(),
-			config.combatMaxHitSize(),
-			config.combatMaxHitPosition(),
-			config.combatMaxHitXOffset(),
-			config.combatMaxHitYOffset(),
-			config.combatMaxHitOutline()
-		);
-	}
-
-	private Rectangle getCombatTabBounds()
-	{
-		Rectangle combined = null;
-		for (int widgetId : STYLE_WIDGETS)
-		{
-			Widget widget = client.getWidget(widgetId);
-			if (widget == null || widget.isHidden())
-			{
-				continue;
-			}
-
-			Rectangle bounds = widget.getBounds();
-			if (bounds == null || bounds.width <= 0 || bounds.height <= 0)
-			{
-				continue;
-			}
-
-			Rectangle parentBounds = getLargestAncestorBounds(widget);
-			if (parentBounds != null)
-			{
-				bounds = parentBounds;
-			}
-
-			combined = combined == null ? new Rectangle(bounds) : combined.union(bounds);
-		}
-
-		return combined;
-	}
-
-	private Rectangle getLargestAncestorBounds(Widget widget)
-	{
-		Rectangle largest = null;
-		int groupId = widget.getId() >>> 16;
-
-		for (Widget current = widget; current != null; current = current.getParent())
-		{
-			if ((current.getId() >>> 16) != groupId || current.isHidden())
-			{
-				continue;
-			}
-
-			Rectangle bounds = current.getBounds();
-			if (bounds == null || bounds.width <= 0 || bounds.height <= 0)
-			{
-				continue;
-			}
-
-			if (largest == null || (bounds.width * bounds.height) > (largest.width * largest.height))
-			{
-				largest = bounds;
-			}
-		}
-
-		return largest;
 	}
 
 	private CombatStyleXp[] getWeaponTypeStyles(int weaponType)
@@ -418,65 +289,6 @@ public class CombatStyleOverlay extends Overlay
 		}
 
 		return style.getShortLabel().toUpperCase();
-	}
-
-	private int getSelectedStyleIndex()
-	{
-		int selectedStyle = client.getVarpValue(VarPlayerID.COM_MODE);
-		int autocastMode = client.getVarbitValue(VarbitID.AUTOCAST_DEFMODE);
-		if (selectedStyle == 4)
-		{
-			selectedStyle += autocastMode;
-		}
-		return selectedStyle;
-	}
-
-	private String getMaxHitText()
-	{
-		Integer maxHit = readMaxHitFromPlugin("com.maxhit.MaxHitPlugin");
-		if (maxHit != null)
-		{
-			return Integer.toString(maxHit);
-		}
-
-		maxHit = readMaxHitFromPlugin("com.maxhitcalc.MaxHitCalcPlugin");
-		return maxHit != null ? Integer.toString(maxHit) : null;
-	}
-
-	private Integer readMaxHitFromPlugin(String className)
-	{
-		for (Plugin plugin : pluginManager.getPlugins())
-		{
-			if (!className.equals(plugin.getClass().getName()) || !pluginManager.isPluginActive(plugin))
-			{
-				continue;
-			}
-
-			try
-			{
-				if ("com.maxhit.MaxHitPlugin".equals(className))
-				{
-					Method getCalculator = plugin.getClass().getMethod("getMaxHitCalculator");
-					Object calculator = getCalculator.invoke(plugin);
-					if (calculator == null)
-					{
-						return null;
-					}
-
-					Method getMaxHit = calculator.getClass().getMethod("getMaxHit");
-					return (int) Math.floor(((Number) getMaxHit.invoke(calculator)).doubleValue());
-				}
-
-				Field maxHitField = plugin.getClass().getField("maxHit");
-				return maxHitField.getInt(plugin);
-			}
-			catch (ReflectiveOperationException ex)
-			{
-				return null;
-			}
-		}
-
-		return null;
 	}
 
 	private enum CombatStyleXp
